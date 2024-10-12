@@ -1,0 +1,1102 @@
+{
+	"info": {
+		"_postman_id": "6dfb1957-ff87-4148-ad6a-1789c3d595fb",
+		"name": "BooksDataDrivenAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21604128"
+	},
+	"item": [
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"accessToken\": {\r",
+									"            \"type\": \"string\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"accessToken\"\r",
+									"    ]\r",
+									"}\r",
+									"pm.collectionVariables.set(\"token\", data.accessToken);\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"Created\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"object\");\r",
+									"    pm.expect(data.accessToken).to.be.an(\"string\");\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"book_url\",\"https://simple-books-api.glitch.me\");\r",
+									"let random=Math.random().toString(36).substring(2);\r",
+									"let name=\"Manu\"+random;\r",
+									"let email=\"manu\"+random+\"@g.in\";\r",
+									"pm.collectionVariables.set(\"userName\", name);\r",
+									"pm.collectionVariables.set(\"email\", email);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientName\":\"{{userName}}\",\r\n    \"clientEmail\":\"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/api-clients/",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"api-clients",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BookStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"status\": {\r",
+									"            \"type\": \"string\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"status\"\r",
+									"    ]\r",
+									"}\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(2000) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"object\");\r",
+									"    pm.expect(data.status).to.be.a(\"string\");\r",
+									"    pm.expect(data.status).to.be.eql(\"OK\");\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/status",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BooksList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"array\",\r",
+									"    \"items\": [\r",
+									"        {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"id\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"name\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"type\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"available\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"id\",\r",
+									"                \"name\",\r",
+									"                \"type\",\r",
+									"                \"available\"\r",
+									"            ]\r",
+									"        }\r",
+									"    ]\r",
+									"}\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(2000) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"array\");\r",
+									"    data.forEach(item => {\r",
+									"        pm.expect(item).to.be.an(\"object\");\r",
+									"        pm.expect(item.id).to.be.a(\"number\");\r",
+									"        pm.expect(item.name).to.be.a(\"string\");\r",
+									"        pm.expect(item.type).to.be.a(\"string\");\r",
+									"        pm.expect(item.available).to.be.a(\"boolean\");\r",
+									"    });\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });\r",
+									"pm.collectionVariables.set(\"bookId\", data[0].id);\r",
+									"pm.collectionVariables.set(\"bookName\", data[0].name);\r",
+									"pm.collectionVariables.set(\"bookType\", data[0].type);\r",
+									"pm.collectionVariables.set(\"bookAvilable\", data[0].available);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/books",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SingleBook",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"author\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"isbn\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"type\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"price\": {\r",
+									"            \"type\": \"number\"\r",
+									"        },\r",
+									"        \"current-stock\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"available\": {\r",
+									"            \"type\": \"boolean\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"name\",\r",
+									"        \"author\",\r",
+									"        \"isbn\",\r",
+									"        \"type\",\r",
+									"        \"price\",\r",
+									"        \"current-stock\",\r",
+									"        \"available\"\r",
+									"    ]\r",
+									"}\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(2000) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"object\");\r",
+									"    pm.expect(data.id).to.be.a(\"number\");\r",
+									"    pm.expect(data.name).to.be.a(\"string\");\r",
+									"    pm.expect(data.author).to.be.a(\"string\");\r",
+									"    pm.expect(data.isbn).to.be.a(\"string\");\r",
+									"    pm.expect(data.type).to.be.a(\"string\");\r",
+									"    pm.expect(data.price).to.be.a(\"number\");\r",
+									"    pm.expect(data[\"current-stock\"]).to.be.a(\"number\");\r",
+									"    pm.expect(data.available).to.be.a(\"boolean\");\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });\r",
+									"pm.test(\"TestResponseData\", () => {\r",
+									"    pm.expect(data.id).to.be.eql(pm.collectionVariables.get(\"bookId\"));\r",
+									"    pm.expect(data.name).to.be.eql(pm.collectionVariables.get(\"bookName\"));\r",
+									"    pm.expect(data.type).to.be.eql(pm.collectionVariables.get(\"bookType\"));\r",
+									"    pm.expect(data.available).to.be.eql(pm.collectionVariables.get(\"bookAvilable\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/books/{{bookId}}",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"books",
+								"{{bookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OrderBook",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"created\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"orderId\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"created\",\r",
+									"    \"orderId\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.collectionVariables.set(\"orderId\",data.orderId);\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"Created\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(2000) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"object\");\r",
+									"    pm.expect(data.created).to.be.a(\"boolean\");\r",
+									"    pm.expect(data.orderId).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bookId\": \"{{bookId}}\",\r\n    \"customerName\":\"{{userName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/orders",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllOrders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": [\r",
+									"    {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"bookId\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"customerName\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"createdBy\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"quantity\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"timestamp\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"bookId\",\r",
+									"        \"customerName\",\r",
+									"        \"createdBy\",\r",
+									"        \"quantity\",\r",
+									"        \"timestamp\"\r",
+									"      ]\r",
+									"    }\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1000) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"array\");\r",
+									"    data.forEach(item => {\r",
+									"        pm.expect(item).to.be.an(\"object\");\r",
+									"        pm.expect(item.id).to.be.a(\"string\");\r",
+									"        pm.expect(item.bookId).to.be.a(\"number\");\r",
+									"        pm.expect(item.customerName).to.be.a(\"string\");\r",
+									"        pm.expect(item.createdBy).to.be.a(\"string\");\r",
+									"        pm.expect(item.quantity).to.be.a(\"number\");\r",
+									"        pm.expect(item.timestamp).to.be.a(\"number\");\r",
+									"    });\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/orders",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SingleOrder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"bookId\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"customerName\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"createdBy\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"quantity\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"timestamp\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"bookId\",\r",
+									"        \"customerName\",\r",
+									"        \"createdBy\",\r",
+									"        \"quantity\",\r",
+									"        \"timestamp\"\r",
+									"    ]\r",
+									"}\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"object\");\r",
+									"    pm.expect(data.id).to.be.a(\"string\");\r",
+									"    pm.expect(data.bookId).to.be.a(\"number\");\r",
+									"    pm.expect(data.customerName).to.be.a(\"string\");\r",
+									"    pm.expect(data.createdBy).to.be.a(\"string\");\r",
+									"    pm.expect(data.quantity).to.be.a(\"number\");\r",
+									"    pm.expect(data.timestamp).to.be.a(\"number\");\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });\r",
+									"pm.test(\"TestResponseData\", () => {\r",
+									"    pm.expect(data.id).to.be.eql(pm.collectionVariables.get(\"orderId\"));\r",
+									"    pm.expect(data.bookId).to.be.eql(pm.collectionVariables.get(\"bookId\"));\r",
+									"    pm.expect(data.customerName).to.be.eql(pm.collectionVariables.get(\"userName\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/orders/{{orderId}}",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"orders",
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateOrder",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let random = Math.random().toString(36).substring(2);\r",
+									"let name = \"Manoj\" + random;\r",
+									"pm.collectionVariables.set(\"userName\", name);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201,202,203,204]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"No Content\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerName\":\"{{userName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/orders/{{orderId}}",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"orders",
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOrder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201,202,203,204]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"No Content\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/orders/{{orderId}}",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"orders",
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BooksDataDriven",
+			"item": [
+				{
+					"name": "OrderBook",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"created\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"orderId\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"created\",\r",
+									"    \"orderId\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.collectionVariables.set(\"orderId\",data.orderId);\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"Created\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(2000) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"object\");\r",
+									"    pm.expect(data.created).to.be.a(\"boolean\");\r",
+									"    pm.expect(data.orderId).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bookId\": \"{{BookId}}\",\r\n    \"customerName\":\"{{CustomerName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/orders",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SingleOrder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"bookId\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"customerName\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"createdBy\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"quantity\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"timestamp\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"bookId\",\r",
+									"        \"customerName\",\r",
+									"        \"createdBy\",\r",
+									"        \"quantity\",\r",
+									"        \"timestamp\"\r",
+									"    ]\r",
+									"}\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(data).to.be.an(\"object\");\r",
+									"    pm.expect(data.id).to.be.a(\"string\");\r",
+									"    pm.expect(data.bookId).to.be.a(\"number\");\r",
+									"    pm.expect(data.customerName).to.be.a(\"string\");\r",
+									"    pm.expect(data.createdBy).to.be.a(\"string\");\r",
+									"    pm.expect(data.quantity).to.be.a(\"number\");\r",
+									"    pm.expect(data.timestamp).to.be.a(\"number\");\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });\r",
+									"pm.test(\"TestResponseData\", () => {\r",
+									"    pm.expect(data.id).to.be.eql(pm.collectionVariables.get(\"orderId\"));\r",
+									"    // pm.expect(data.bookId).to.be.eql(pm.collectionVariables.get(\"bookId\"));\r",
+									"    // pm.expect(data.customerName).to.be.eql(pm.collectionVariables.get(\"userName\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{book_url}}/orders/{{orderId}}",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"orders",
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOrder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201,202,203,204]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"No Content\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/orders/{{orderId}}",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"orders",
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "book_url",
+			"value": ""
+		},
+		{
+			"key": "userName",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "bookId",
+			"value": ""
+		},
+		{
+			"key": "bookName",
+			"value": ""
+		},
+		{
+			"key": "bookType",
+			"value": ""
+		},
+		{
+			"key": "bookAvilable",
+			"value": ""
+		},
+		{
+			"key": "orderId",
+			"value": ""
+		}
+	]
+}
