@@ -1,0 +1,675 @@
+{
+	"info": {
+		"_postman_id": "54708c98-2da0-4be3-9f14-e02b1190c534",
+		"name": "ObjectCRUD_Api's",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21604128"
+	},
+	"item": [
+		{
+			"name": "ObjectApi",
+			"item": [
+				{
+					"name": "ListOfAllObjects",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"      \"id\": { \"type\": \"string\" },\r",
+									"      \"name\": { \"type\": \"string\" },\r",
+									"      \"data\": {\r",
+									"        \"type\": [\"object\", \"null\"],\r",
+									"        \"properties\": {\r",
+									"          \"color\": { \"type\": \"string\" },\r",
+									"          \"capacity\": { \"type\": [\"string\", \"number\"] },\r",
+									"          \"price\": { \"type\": \"number\" },\r",
+									"          \"generation\": { \"type\": \"string\" },\r",
+									"          \"year\": { \"type\": \"integer\" },\r",
+									"          \"CPU model\": { \"type\": \"string\" },\r",
+									"          \"Hard disk size\": { \"type\": \"string\" },\r",
+									"          \"Strap Colour\": { \"type\": \"string\" },\r",
+									"          \"Case Size\": { \"type\": \"string\" },\r",
+									"          \"Screen size\": { \"type\": \"number\" },\r",
+									"          \"Description\": { \"type\": \"string\" },\r",
+									"          \"Capacity\": { \"type\": [\"string\", \"number\"] }, // Accounting for both \"capacity\" and \"Capacity\"\r",
+									"          \"capacity GB\": { \"type\": \"number\" } // Specifically for \"capacity GB\"\r",
+									"        },\r",
+									"        \"additionalProperties\": true\r",
+									"      }\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"name\", \"data\"]\r",
+									"  }\r",
+									"}\r",
+									"\r",
+									"pm.collectionVariables.set(\"ID1\",jsonData[0].id)\r",
+									"pm.collectionVariables.set(\"objectName1\",jsonData[0].name)\r",
+									"pm.collectionVariables.set(\"ID2\",jsonData[1].id)\r",
+									"pm.collectionVariables.set(\"objectName2\",jsonData[1].name)\r",
+									"pm.collectionVariables.set(\"ID3\",jsonData[2].id)\r",
+									"pm.collectionVariables.set(\"objectName3\",jsonData[2].name)\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"array\");\r",
+									"     jsonData.forEach((item, index) => {\r",
+									"        pm.expect(item).to.be.a(\"object\", `Data at index ${index} is not a object`)\r",
+									"        pm.expect(item.id).to.be.a(\"string\", `id at index ${index} is not a string`)\r",
+									"        pm.expect(item.name).to.be.a(\"string\", `device_id at index ${index} is not a string`)\r",
+									"        pm.expect(typeof item.data === \"object\" || item.data === null\r",
+									"        ).to.eql(true, `data at index ${index} is not a object`)\r",
+									"     });\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(jsonData, schema)).to.be.true });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"objectUrl\",\"https://api.restful-api.dev\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{objectUrl}}/objects",
+							"host": [
+								"{{objectUrl}}"
+							],
+							"path": [
+								"objects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListOfObjectsByIds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);\r",
+									"var schema = \r",
+									"\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"array\");\r",
+									"     jsonData.forEach((item, index) => {\r",
+									"        pm.expect(item).to.be.a(\"object\", `Data at index ${index} is not a object`)\r",
+									"        pm.expect(item.id).to.be.a(\"string\", `id at index ${index} is not a string`)\r",
+									"        pm.expect(item.name).to.be.a(\"string\", `device_id at index ${index} is not a string`)\r",
+									"        pm.expect(typeof item.data === \"object\" || item.data === null\r",
+									"        ).to.eql(true, `data at index ${index} is not a object`)\r",
+									"     });\r",
+									"});\r",
+									"pm.test(\"TestResponseData\",()=>{\r",
+									"pm.expect(jsonData[0].id).to.be.eql(pm.collectionVariables.get(\"ID1\"))\r",
+									"pm.expect(jsonData[0].name).to.be.eql(pm.collectionVariables.get(\"objectName1\"))\r",
+									"pm.expect(jsonData[1].id).to.be.eql(pm.collectionVariables.get(\"ID2\"))\r",
+									"pm.expect(jsonData[1].name).to.be.eql(pm.collectionVariables.get(\"objectName2\"))\r",
+									"pm.expect(jsonData[2].id).to.be.eql(pm.collectionVariables.get(\"ID3\"))\r",
+									"pm.expect(jsonData[2].name).to.be.eql(pm.collectionVariables.get(\"objectName3\"))\r",
+									"});\r",
+									"// pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{objectUrl}}/objects?id={{ID1}}&id={{ID2}}&id={{ID3}}",
+							"host": [
+								"{{objectUrl}}"
+							],
+							"path": [
+								"objects"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{ID1}}"
+								},
+								{
+									"key": "id",
+									"value": "{{ID2}}"
+								},
+								{
+									"key": "id",
+									"value": "{{ID3}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SingleObject",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);\r",
+									"var schema =\r",
+									"\r",
+									"    pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\", `id is not a string`)\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\", `name is not a string`)\r",
+									"    pm.expect(typeof jsonData.data === \"object\" || jsonData.data === null\r",
+									"    ).to.eql(true, `data is not a object`)\r",
+									"});\r",
+									"pm.test(\"TestResponseData\", () => {\r",
+									"    pm.expect(jsonData.id).to.be.eql(pm.collectionVariables.get(\"ID1\"))\r",
+									"    pm.expect(jsonData.name).to.be.eql(pm.collectionVariables.get(\"objectName1\"))\r",
+									"});\r",
+									"// pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(data, schema)).to.be.true });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{objectUrl}}/objects/{{ID1}}",
+							"host": [
+								"{{objectUrl}}"
+							],
+							"path": [
+								"objects",
+								"{{ID1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddObject",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let random, userName,userEmail,currentYear; \r",
+									"random=Math.random().toString(36).substring(2);\r",
+									"mobileName=\"MobileName\"+random;\r",
+									"mobilePrice=random.substring(0,5);\r",
+									"currentYear = new Date().getFullYear();\r",
+									"pm.collectionVariables.set(\"mobileName\",mobileName);\r",
+									"pm.collectionVariables.set(\"mobilePrice\",currentYear);\r",
+									"pm.collectionVariables.set(\"mobileYear\",currentYear);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"id\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"name\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"createdAt\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"year\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"price\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"year\",\r",
+									"        \"price\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"id\",\r",
+									"    \"name\",\r",
+									"    \"createdAt\",\r",
+									"    \"data\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.collectionVariables.set(\"postObjectId\",jsonData.id)\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\", `id is not a string`)\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\", `name is not a string`)\r",
+									"    pm.expect(jsonData.createdAt).to.be.a(\"string\", `createdAt is not a string`)\r",
+									"    pm.expect(jsonData.data).to.be.a(\"object\", `data is not a string`)\r",
+									"    pm.expect(jsonData.data.year).to.be.a(\"number\", `data.year is not a number`)\r",
+									"    pm.expect(jsonData.data.price).to.be.a(\"number\", `data.price is not a number`)\r",
+									"});\r",
+									"pm.test(\"TestResponseData\", () => {\r",
+									"    pm.expect(jsonData.name).to.be.eql(pm.collectionVariables.get(\"mobileName\"))\r",
+									"    pm.expect(jsonData.data.price).to.be.eql(pm.collectionVariables.get(\"mobilePrice\"))\r",
+									"    pm.expect(jsonData.data.year).to.be.eql(pm.collectionVariables.get(\"mobileYear\"))\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(jsonData, schema)).to.be.true });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n   \"name\": \"{{mobileName}}\",\r\n   \"data\": {\r\n      \"year\": {{mobileYear}},\r\n      \"price\": {{mobilePrice}}\r\n    //   \"CPU model\": \"Intel Core i9\",\r\n    //   \"Hard disk size\": \"1 TB\"\r\n   }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{objectUrl}}/objects",
+							"host": [
+								"{{objectUrl}}"
+							],
+							"path": [
+								"objects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateObject",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let random, userName,userEmail,currentYear,updatePrice; \r",
+									"random=Math.random().toString(36).substring(2);\r",
+									"mobileName=\"MobileName\"+random;\r",
+									"mobilePrice=random.substring(0,5);\r",
+									"currentYear = new Date().getFullYear();\r",
+									"updatePrice=currentYear-1;\r",
+									"pm.collectionVariables.set(\"mobileName\",mobileName);\r",
+									"pm.collectionVariables.set(\"mobilePrice\",updatePrice);\r",
+									"pm.collectionVariables.set(\"mobileYear\",currentYear);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"updatedAt\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"data\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"year\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"price\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"year\",\r",
+									"                \"price\"\r",
+									"            ]\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"name\",\r",
+									"        \"updatedAt\",\r",
+									"        \"data\"\r",
+									"    ]\r",
+									"}\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\", `id is not a string`)\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\", `name is not a string`)\r",
+									"    pm.expect(jsonData.updatedAt).to.be.a(\"string\", `createdAt is not a string`)\r",
+									"    pm.expect(jsonData.data).to.be.a(\"object\", `data is not a string`)\r",
+									"    pm.expect(jsonData.data.year).to.be.a(\"number\", `data.year is not a number`)\r",
+									"    pm.expect(jsonData.data.price).to.be.a(\"number\", `data.price is not a number`)\r",
+									"});\r",
+									"pm.test(\"TestResponseData\", () => {\r",
+									"    pm.expect(jsonData.id).to.be.eql(pm.collectionVariables.get(\"postObjectId\"))\r",
+									"    pm.expect(jsonData.name).to.be.eql(pm.collectionVariables.get(\"mobileName\"))\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(jsonData, schema)).to.be.true });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n   \"name\": \"{{mobileName}}\",\r\n   \"data\": {\r\n      \"year\": {{mobileYear}},\r\n      \"price\": {{mobilePrice}}\r\n    //   \"CPU model\": \"Intel Core i9\",\r\n    //   \"Hard disk size\": \"1 TB\"\r\n   }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{objectUrl}}/objects/{{postObjectId}}",
+							"host": [
+								"{{objectUrl}}"
+							],
+							"path": [
+								"objects",
+								"{{postObjectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PartiallyUpdateObject",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let patchMobileName;\r",
+									"currentYear = new Date().getFullYear();\r",
+									"patchMobileName=\"MobileName\"+\"-\"+currentYear;\r",
+									"pm.collectionVariables.set(\"patchMobileName\",patchMobileName);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"updatedAt\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"data\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"year\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"price\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"year\",\r",
+									"                \"price\"\r",
+									"            ]\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"id\",\r",
+									"        \"name\",\r",
+									"        \"updatedAt\",\r",
+									"        \"data\"\r",
+									"    ]\r",
+									"}\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\", `id is not a string`)\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\", `name is not a string`)\r",
+									"    pm.expect(jsonData.updatedAt).to.be.a(\"string\", `createdAt is not a string`)\r",
+									"    pm.expect(jsonData.data).to.be.a(\"object\", `data is not a string`)\r",
+									"    pm.expect(jsonData.data.year).to.be.a(\"number\", `data.year is not a number`)\r",
+									"    pm.expect(jsonData.data.price).to.be.a(\"number\", `data.price is not a number`)\r",
+									"});\r",
+									"pm.test(\"TestResponseData\", () => {\r",
+									"    pm.expect(jsonData.id).to.be.eql(pm.collectionVariables.get(\"postObjectId\"))\r",
+									"    pm.expect(jsonData.name).to.be.eql(pm.collectionVariables.get(\"patchMobileName\"))\r",
+									"    pm.expect(jsonData.data.year).to.be.eql(pm.collectionVariables.get(\"mobileYear\"))\r",
+									"    pm.expect(jsonData.data.price).to.be.eql(pm.collectionVariables.get(\"mobilePrice\"))\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(jsonData, schema)).to.be.true });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"{{patchMobileName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{objectUrl}}/objects/{{postObjectId}}",
+							"host": [
+								"{{objectUrl}}"
+							],
+							"path": [
+								"objects",
+								"{{postObjectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteObject",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"message\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"TestCode200or201\", () => { pm.expect(pm.response.code).to.oneOf([200, 201]) });\r",
+									"pm.test(\"TestStatusMsg\", () => { pm.response.to.have.status(\"OK\") });\r",
+									"pm.test(\"TestResponceTime\", () => { pm.expect(pm.response.responseTime).be.below(1500) })\r",
+									"pm.test(\"TestHeader\", () => { pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\") })\r",
+									"pm.test(\"TestConnection\", () => { pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\") })\r",
+									"pm.test(\"TestResponse\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.message).to.be.a(\"string\", `message is not a string`)\r",
+									"});\r",
+									"pm.test(\"TestResponseData\", () => {\r",
+									"    pm.expect(jsonData.message).to.be.eql(\"Object with id = \"+pm.collectionVariables.get(\"postObjectId\")+\" has been deleted.\");\r",
+									"});\r",
+									"pm.test(\"Schema validation\", () => { pm.expect(tv4.validate(jsonData, schema)).to.be.true });\r",
+									"\r",
+									"pm.collectionVariables.unset(\"ID1\");\r",
+									"pm.collectionVariables.unset(\"ID2\");\r",
+									"pm.collectionVariables.unset(\"ID3\");\r",
+									"pm.collectionVariables.unset(\"objectName1\");\r",
+									"pm.collectionVariables.unset(\"objectName2\");\r",
+									"pm.collectionVariables.unset(\"objectName3\");\r",
+									"pm.collectionVariables.unset(\"mobileName\");\r",
+									"pm.collectionVariables.unset(\"mobilePrice\");\r",
+									"pm.collectionVariables.unset(\"mobileYear\");\r",
+									"pm.collectionVariables.unset(\"postObjectId\");\r",
+									"pm.collectionVariables.unset(\"patchMobileName\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{objectUrl}}/objects/{{postObjectId}}",
+							"host": [
+								"{{objectUrl}}"
+							],
+							"path": [
+								"objects",
+								"{{postObjectId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "c12a0733cf05736bd8aa52facce4dcb0f7675e4268a9b2a0e197db2898d786e2",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"pm.globals.set(\"user_url\",\"https://gorest.co.in\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "objectUrl",
+			"value": ""
+		}
+	]
+}

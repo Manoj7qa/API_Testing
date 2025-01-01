@@ -890,12 +890,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{book_url}}/orders",
+							"raw": "{{book_url}}/book",
 							"host": [
 								"{{book_url}}"
 							],
 							"path": [
-								"orders"
+								"book"
 							]
 						}
 					},
